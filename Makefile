@@ -10,7 +10,7 @@ OBJS = $(SRCS:.c=.o)
 .PHONY: all
 all: ${TARGET_LIB}
 test: libpecann.so
-	$(CC) -L. test/mnist.c -lpecann -lm -o test/mnist 
+	$(CC) -L. -Wl,-rpath=. test/mnist.c -lpecann -lm -o test/mnist 
 
 $(TARGET_LIB): $(OBJS)
 	$(CC) ${LDFLAGS} -o $@ $^
@@ -22,4 +22,4 @@ include $(SRCS:.c=.d)
 
 .PHONY: clean
 clean:
-	-${RM} ${TARGET_LIB} ${OBJS} $(SRCS:.c=.d) test/mnist
+	-${RM} ${TARGET_LIB} ${OBJS} $(SRCS:.c=.d) test/mnist test/libpecann.so
