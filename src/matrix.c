@@ -150,7 +150,7 @@ void printMatrix(Matrix m) {
 void saveMatrixToFile(FILE *file, Matrix m) {
     fprintf(file, "%d %d ", m.rows, m.cols);
     for (unsigned i = 0; i < len(m); i++) {
-        fprintf(file,  "%f ", m.data[i]);
+        fprintf(file,  "%.9g ", m.data[i]);
     }
 }
 
