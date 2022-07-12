@@ -148,7 +148,7 @@ Matrix feedForward(Network *net, float *input) {
 }
 
 /**
- * @brief Traing the network using SGD algorithm
+ * @brief Train the network using SGD algorithm
  * 
  * @param net Pointer to a network
  * @param trainingData Array of TrainingExamples to train the network with
@@ -189,8 +189,7 @@ void stochasticGradientDescent(
             } else {
                 bSize = trainingData + nExamples - b + 1;
             }
-            Matrix dBiases[net->nLayers - 1];
-            Matrix dWeights[net->nLayers - 1];
+            Matrix dWeights[net->nLayers - 1], dBiases[net->nLayers - 1];
             for (unsigned j = 0; j < net->nLayers - 1; j++) {
                     dBiases[j] = matrix(net->biases[j].rows, net->biases[j].cols);
                     dWeights[j] = matrix(net->weights[j].rows, net->weights[j].cols);
@@ -256,19 +255,17 @@ static void backprop(Network *net, TrainingExample example, Matrix *dBiases, Mat
         
         freeMatrix(wa);
     }
-    
-    Matrix costDerivative = sub(activations[net->nLayers - 1], 
-                                matrixFromData(example.nOutputs,1,example.output));
-    
+    Matrix costDerivative, delta, aT, deltaAT, wT, wTdelta, newDelta;
+
+    costDerivative = sub(activations[net->nLayers - 1], matrixFromData(example.nOutputs,1,example.output));
     applyFuncInPlace(zs[net->nLayers - 2], sigmoidPrime);
-    Matrix delta = hadamard(costDerivative, zs[net->nLayers - 2]);
+    delta = hadamard(costDerivative, zs[net->nLayers - 2]);
+
     freeMatrix(costDerivative);
 
-    
-
     addInPlace(dBiases[net->nLayers - 2],delta);
-    Matrix aT = transpose(activations[net->nLayers - 2]);
-    Matrix deltaAT = mult(delta, aT);
+    aT = transpose(activations[net->nLayers - 2]);
+    deltaAT = mult(delta, aT);
     
     addInPlace(dWeights[net->nLayers - 2], deltaAT);
     freeMatrix(deltaAT);
@@ -276,9 +273,9 @@ static void backprop(Network *net, TrainingExample example, Matrix *dBiases, Mat
     for (unsigned i = 2; i < net->nLayers; i++) {
         z = zs[net->nLayers - 1 - i];
         applyFuncInPlace(z,sigmoidPrime);
-        Matrix wT = transpose(net->weights[net->nLayers - i]);
-        Matrix wTdelta = mult(wT, delta);
-        Matrix newDelta = hadamard(wTdelta, z);
+        wT = transpose(net->weights[net->nLayers - i]);
+        wTdelta = mult(wT, delta);
+        newDelta = hadamard(wTdelta, z);
         
         addInPlace(dBiases[net->nLayers - 1 - i], newDelta);
         aT = transpose(activations[net->nLayers - 1 - i]);
