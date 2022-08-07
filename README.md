@@ -1,5 +1,5 @@
 # pecann
-A lightweight ANN library written in C
+A lightweight artificial neural network library written in C
 
 This is a very simple artificial neural network library. After training with the MNIST handwritten digits dataset, it can correctly
 identify handwritten digits it has never seen before with ~98% accuracy. I have a long way to go with regards to optimization. It takes
