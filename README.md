@@ -13,6 +13,7 @@ Network *net = initNetwork(sizes, 3);
 ```
 
 ## Training the network
+This will take a long time.
 ```C
 /**
  * @brief Train the network using SGD algorithm
@@ -39,4 +40,11 @@ void stochasticGradientDescent(
     enum EActivationFunction af,
     TrainingExample *testData,
     unsigned nTestData);
+```
+
+## Serializing/Deserializing
+I implemented two simple functions for reading/writing a network to a file.
+```C
+int saveNetworkToFile(const char *filename, Network *net);
+Network *readNetworkFromFile(const char *filename);
 ```
